@@ -44,6 +44,23 @@ async function run() {
       const result = await taskCollection.find(query).toArray();
       res.send(result);
     });
+    app.patch("/tasks/:id", async (req, res) => {
+      const updatedTaskData = req?.body;
+      const id = req?.params?.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          email: updatedTaskData?.email,
+          title: updatedTaskData?.title,
+          description: updatedTaskData?.description,
+          date: updatedTaskData?.date,
+          priority: updatedTaskData?.priority,
+          status: updatedTaskData?.status,
+        },
+      };
+      const result = await taskCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
     app.delete("/tasks/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
